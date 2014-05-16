@@ -1,4 +1,4 @@
-# Ansible Ansible Role #
+# Ansible elasticsearch Role #
 
 Ansible role to install and configure elasticsearch. Feedback, bug-reports, 
 requests, is welcomed and can be done via
