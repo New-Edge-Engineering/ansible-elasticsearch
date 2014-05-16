@@ -1,0 +1,34 @@
+---
+- name: download .deb file
+  get_url:
+    dest=/tmp/elasticsearch-1.1.1.deb
+    url=https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.1.deb
+    mode=0644
+  tags:
+    - elasticsearch
+    - install
+    - packages
+
+- name: install from .deb package
+  command: dpkg --skip-same-version --install {{ temp_dir }}/elasticsearch-1.1.1.deb
+  register: dpkg_result
+  changed_when: "dpkg_result.stdout.startswith('Selecting')"
+  notify:
+    - restart elasticsearch
+  tags:
+    - elasticsearch
+    - install
+    - packages
+
+- name: ensure elasticsearch logrotation configuration is in place
+  copy:
+    dest=/etc/logrotate.d/elasticsearch
+    src=logrotate.conf
+    owner=root
+    group=root
+    mode=644
+  notify:
+    - restart cron
+  tags:
+    - elasticsearch
+    - log
