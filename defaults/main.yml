@@ -1,3 +1,5 @@
 ---
 # Common
 temp_dir: /tmp
+# elasticsearch
+elasticsearch_version: 1.4.4

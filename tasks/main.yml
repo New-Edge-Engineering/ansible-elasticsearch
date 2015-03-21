@@ -1,16 +1,16 @@
 ---
 - name: download .deb file
   get_url:
-    dest=/tmp/elasticsearch-1.1.1.deb
-    url=https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.1.deb
-    mode=0644
+    dest: "/tmp/elasticsearch-{{ elasticsearch_version }}.deb"
+    url: "https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-{{ elasticsearch_version }}.deb"
+    mode: 0644
   tags:
     - elasticsearch
     - install
     - packages
 
 - name: install from .deb package
-  command: dpkg --skip-same-version --install {{ temp_dir }}/elasticsearch-1.1.1.deb
+  command: "dpkg --skip-same-version --install {{ temp_dir }}/elasticsearch-{{ elasticsearch_version }}.deb"
   register: dpkg_result
   changed_when: "dpkg_result.stdout.startswith('Selecting')"
   notify:
@@ -32,3 +32,4 @@
   tags:
     - elasticsearch
     - log
+
