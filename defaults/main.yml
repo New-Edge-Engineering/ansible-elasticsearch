@@ -3,3 +3,6 @@
 temp_dir: /tmp
 # elasticsearch
 elasticsearch_version: 1.4.4
+elasticsearch_host: localhost
+elasticsearch_cors_origin: *
+elasticsearch_cors_enabled: false

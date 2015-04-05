@@ -33,3 +33,7 @@
     - elasticsearch
     - log
 
+- include: plugins.yml
+  when: elasticsearch_plugins|length > 0
+
+- include: config.yml
