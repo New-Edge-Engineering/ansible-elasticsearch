@@ -8,13 +8,15 @@ requests, is welcomed and can be done via
 - Tested on Mac OS X with Ansible 1.7.
 
 ## Dependencies
-This role does not have a hard dependency on any other role to deploy but rundeck does require java to be installed. smola's [ansible-java-role](https://github.com/smola/ansible-java-role) is a good choice with the
-following configuration:
+This role does not have a hard dependency on any other role to deploy but rundeck does require java to be installed. smola's
+[ansible-java-role](https://github.com/smola/ansible-java-role) is a good choice with the following configuration:
 
  * **Debian:** Ensure java_packages has a debian java package in it, i.e. openjdk-7-jre-headless
  * **RedHat:** Ensure java_packages has a debian java package in it, i.e. java-1.7.0-openjdk, had to adjust role to include RedHat.yml in main.yml to work.
 
 ## Role Variables
+
+ * `elasticsearch_version`: The major and minor version to be installed, defaults to `1.4`.
 
 ## Example Playbook
 
