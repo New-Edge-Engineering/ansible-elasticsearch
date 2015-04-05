@@ -29,19 +29,21 @@
 # Loop though elasticsearch_plugins and install them
 - name: Installing Plugins by Name
   action: >
-    shell bin/plugin -install {{ item.name }} --silent
-    chdir={{ elasticsearch_home_dir }}
+    shell ./plugin -install {{ item.name }} --silent
+    chdir={{ elasticsearch_home_dir }}/bin
   when: item.url is not defined and item.file is not defined
   with_items: elasticsearch_plugins
   ignore_errors: yes
+  sudo: yes
 
 - name: Installing Plugins by URL
   action: >
-    shell bin/plugin -install {{ item.name }} -url {{ item.url }} --silent
-    chdir={{ elasticsearch_home_dir }}
+    shell ./plugin -install {{ item.name }} -url {{ item.url }} --silent
+    chdir={{ elasticsearch_home_dir }}/bin
   when: item.url is defined
   with_items: elasticsearch_plugins
   ignore_errors: yes
+  sudo: yes
 
 - name: Creating Plugin directories as needed
   action: >
@@ -53,6 +55,7 @@
     recurse=yes
   when: item.file is defined
   with_items: elasticsearch_plugins
+  sudo: yes
 
 - name: Installing Plugins by File
   action: >
@@ -64,6 +67,7 @@
   when: item.file is defined
   with_items: elasticsearch_plugins
   ignore_errors: yes
+  sudo: yes
 
 # Fix permissions
 - file: >

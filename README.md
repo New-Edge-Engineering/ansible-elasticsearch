@@ -17,6 +17,7 @@ This role does not have a hard dependency on any other role to deploy but rundec
 ## Role Variables
 
  * `elasticsearch_version`: The major and minor version to be installed, defaults to `1.4`.
+ * `elasticsearch_plugins`: Defaults to empty list but can be a list of plugin dictionaries containing; name, file or url
 
 ## Example Playbook
 
