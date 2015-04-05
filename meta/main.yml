@@ -6,12 +6,16 @@ galaxy_info:
   min_ansible_version: 1.5
   license: MIT
   platforms:
+  - name: EL
+    versions:
+    - all
+  - name: Debian
+    versions:
+    - all
   - name: Ubuntu
     versions:
-    - precise
+    - all
   categories:
-  - system
-  - management
-
-dependencies:
-  - neel.openjdk7
+    - web
+    - system
+    - monitoring

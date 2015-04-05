@@ -9,4 +9,5 @@
     - { regexp: '^script\.disable_dynamic', line: 'script.disable_dynamic: true' }
     - { regexp: 'network\.host', line: 'network.host: {{ elasticsearch_host }}' }
     - { regexp: 'http\.cors\.allow-origin', line: 'http.cors.allow-origin: {{ elasticsearch_cors_origin }}' }
+    - { regexp: 'http\.cors\.enabled', line: 'http.cors.enabled: {{ elasticsearch_cors_enabled }}' }
   notify: restart elasticsearch

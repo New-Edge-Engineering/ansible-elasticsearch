@@ -1,39 +1,38 @@
 ---
-- name: download .deb file
-  get_url:
-    dest: "/tmp/elasticsearch-{{ elasticsearch_version }}.deb"
-    url: "https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-{{ elasticsearch_version }}.deb"
-    mode: 0644
-  tags:
-    - elasticsearch
-    - install
-    - packages
+- include: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
 
-- name: install from .deb package
-  command: "dpkg --skip-same-version --install {{ temp_dir }}/elasticsearch-{{ elasticsearch_version }}.deb"
-  register: dpkg_result
-  changed_when: "dpkg_result.stdout.startswith('Selecting')"
-  notify:
-    - restart elasticsearch
-  tags:
-    - elasticsearch
-    - install
-    - packages
+- include: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
 
-- name: ensure elasticsearch logrotation configuration is in place
-  copy:
-    dest=/etc/logrotate.d/elasticsearch
-    src=logrotate.conf
-    owner=root
-    group=root
-    mode=644
-  notify:
-    - restart cron
-  tags:
-    - elasticsearch
-    - log
+- name: Configure Elasticsearch.
+  lineinfile: >
+    dest=/etc/elasticsearch/elasticsearch.yml
+    regexp="{{ item.regexp }}"
+    line="{{ item.line }}"
+    state=present
+  with_items:
+    - { regexp: '^script\.disable_dynamic', line: 'script.disable_dynamic: true' }
+    - { regexp: 'network\.host', line: 'network.host: localhost' }
+  notify: restart elasticsearch
+
+- name: Start Elasticsearch.
+  service: name=elasticsearch state=started enabled=yes
 
 - include: plugins.yml
   when: elasticsearch_plugins|length > 0
 
 - include: config.yml
+
+# - name: ensure elasticsearch logrotation configuration is in place
+  # copy:
+    # dest=/etc/logrotate.d/elasticsearch
+    # src=logrotate.conf
+    # owner=root
+    # group=root
+    # mode=644
+  # notify:
+    # - restart cron
+  # tags:
+    # - elasticsearch
+    # - log
