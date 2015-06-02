@@ -25,6 +25,8 @@
 # Example for https://github.com/imotov/elasticsearch-facet-script (bin/plugin -install facet-script -url http://dl.bintray.com/content/imotov/elasticsearch-plugins/elasticsearch-facet-script-1.1.2.zip):
 # elasticsearch_plugins:
 #  - { name: 'facet-script', url: 'http://dl.bintray.com/content/imotov/elasticsearch-plugins/elasticsearch-facet-script-1.1.2.zip' }
+#
+# Plugin cofiguration can be added under config:
 
 # Loop though elasticsearch_plugins and install them
 - name: Installing Plugins by Name
@@ -34,7 +36,7 @@
   when: item.url is not defined and item.file is not defined
   with_items: elasticsearch_plugins
   ignore_errors: yes
-  sudo: yes
+  notify: restart elasticsearch
 
 - name: Installing Plugins by URL
   action: >
@@ -43,7 +45,7 @@
   when: item.url is defined
   with_items: elasticsearch_plugins
   ignore_errors: yes
-  sudo: yes
+  notify: restart elasticsearch
 
 - name: Creating Plugin directories as needed
   action: >
@@ -55,9 +57,9 @@
     recurse=yes
   when: item.file is defined
   with_items: elasticsearch_plugins
-  sudo: yes
+  notify: restart elasticsearch
 
-- name: Installing Plugins by File
+- name: Installing Plugins by Archive
   action: >
     unarchive
     src={{ item.file }}
@@ -67,7 +69,18 @@
   when: item.file is defined
   with_items: elasticsearch_plugins
   ignore_errors: yes
-  sudo: yes
+  notify: restart elasticsearch
+
+- name: Adding Plugins Configuration
+  action: >
+    lineinfile
+    dest=/etc/elasticsearch/elasticsearch.yml
+    regexp="{{ item }}"
+    line="{{ item }}"
+    state=present
+  when: elasticsearch_plugins_config is defined
+  with_items: elasticsearch_plugins_config
+  notify: restart elasticsearch
 
 # Fix permissions
 - file: >
@@ -77,7 +90,7 @@
     group={{ elasticsearch_group }}
     recurse=yes
 
-- name: Restart for plugins to take effect
-  service:
-    name: elasticsearch
-    state: restarted
+# - name: Restart for plugins to take effect
+  # service:
+    # name: elasticsearch
+    # state: restarted

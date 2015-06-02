@@ -6,5 +6,5 @@ elasticsearch_plugin_dir: "{{ elasticsearch_home_dir }}/plugins"
 elasticsearch_user: elasticsearch
 elasticsearch_group: elasticsearch
 elasticsearch_host: localhost
-elasticsearch_cors_origin: "*"
+elasticsearch_cors_origin: "'*'"
 elasticsearch_cors_enabled: false
